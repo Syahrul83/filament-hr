@@ -25,12 +25,10 @@ class UserForm
                     ->relationship(
                         'roles',
                         'name',
-                        function (Builder $query) {
-                            if (auth()->user()->id != 1) {
-                                return $query->where('active', 0);
-                            }
-
-                        }
+                        fn (Builder $query) => $query->when(
+                            auth()->id() !== 1,
+                            fn ($q) => $q->where('name', '!=', 'super_admin')
+                        )
                     )
                     ->default(2)
                     ->required()
