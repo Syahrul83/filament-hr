@@ -3,16 +3,14 @@
 namespace App\Filament\Resources\Clients\Pages;
 
 use App\Filament\Resources\Clients\ClientResource;
-
 use App\Models\Audit;
+use App\Models\Client;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
-use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Schemas\Components\Wizard\Step;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ListClients extends ListRecords
 {
@@ -22,26 +20,34 @@ class ListClients extends ListRecords
     {
         return [
             // CreateAction::make(),
-           Action::make('create')
+            Action::make('create')
+                ->form([
+                    Select::make('audit_id')
+                        ->required()
+                        ->options(function () {
+                            return Audit::all()->pluck('judul', 'id');
+                        }),
+                ])
+                ->action(function (array $data) {
+                    $audit = Audit::find($data['audit_id']);
 
-            ->schema([
-                Select::make('audit_id')
-                    ->required()
-                    ->options(
-                        Audit::all()->pluck('judul', 'id')
-                    )->afterStateUpdated(function ($state, callable $set) {
-                        $audit = Audit::find($state);
-                        $set('judul', $audit->judul);
-                        $set('penjelasan', $audit->penjelasan);
-                        $set('tanggal', $audit->tanggal);
-                        $set('klausul_panduan', $audit->klausul_panduan);
-                    })
-                
-               
-            ])
-           
-
+                    if ($audit) {
+                        Client::create([
+                            'user_id' => Auth::user()->id,
+                            'judul' => $audit->judul,
+                            'penjelasan' => $audit->penjelasan,
+                            'klausul_panduan' => $audit->klausul_panduan,
+                        ]);
+                    }
+                }),
 
         ];
+    }
+
+    protected function getTableQuery(): Builder
+    {
+
+        return Client::where('user_id', Auth::user()->id)->orderBy('id', 'desc');
+
     }
 }

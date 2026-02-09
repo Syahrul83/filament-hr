@@ -3,8 +3,11 @@
 namespace App\Filament\Resources\Clients\Schemas;
 
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class ClientForm
@@ -13,17 +16,33 @@ class ClientForm
     {
         return $schema
             ->components([
-                TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('judul')
-                    ->required(),
-                TextInput::make('penjelasan'),
-                DatePicker::make('tanggal')
-                    ->required(),
-                Textarea::make('klausul_panduan')
-                    ->required()
-                    ->columnSpanFull(),
-            ]);
+                Section::make()
+                    ->schema([
+                        TextInput::make('judul')
+                            ->disabled()
+                            ->required(),
+                        TextInput::make('user_id')
+                            ->default(auth()->id())
+                            ->hidden()
+                            ->required(),
+                        TextInput::make('penjelasan')
+                            ->disabled(),
+                        DatePicker::make('tanggal')
+                            ->required(),
+                    ]),
+
+                Repeater::make('klausul_panduan')
+                    ->schema([
+                        Textarea::make('klausul'),
+                        Textarea::make('paduan_bukti_objektif'),
+                        Textarea::make('temuan')->hidden(),
+                        FileUpload::make('lampiran')
+                            ->directory('audit-attachments')
+                            ->maxSize(1120),
+                    ])
+                    ->addable(false)
+                    ->deletable(false),
+
+            ])->columns(1);
     }
 }
