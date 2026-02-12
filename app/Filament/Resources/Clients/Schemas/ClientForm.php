@@ -38,7 +38,7 @@ class ClientForm
                         Textarea::make('temuan')->hidden(),
                         FileUpload::make('lampiran')
                             ->image()
-                            ->directory('audit-attachments')
+                            ->directory('auditAttachments')
                             ->maxSize(1120),
                     ])
                     ->addable(false)
