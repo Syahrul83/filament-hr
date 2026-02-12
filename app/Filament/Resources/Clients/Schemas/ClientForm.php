@@ -42,6 +42,8 @@ class ClientForm
                     ])
                     ->addable(false)
                     ->deletable(false),
+                TextInput::make('nilai_uji_1'),
+                TextInput::make('nilai_uji_2'),
 
             ])->columns(1);
     }

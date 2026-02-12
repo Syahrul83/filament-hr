@@ -2,15 +2,13 @@
 
 namespace App\Filament\Resources\Audits\Schemas;
 
-use Faker\Core\File;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
+use Filament\Schemas\Schema;
 
 class AuditForm
 {
@@ -36,14 +34,16 @@ class AuditForm
                         Textarea::make('klausul'),
                         Textarea::make('paduan_bukti_objektif'),
                         Textarea::make('temuan')->hidden(),
+
                         FileUpload::make('lampiran')
 
                             ->directory('audit-attachments')
                             ->maxSize(1120)->hidden(),
 
-                    ])
+                        TextInput::make('nilai_uji_1')->hidden(),
+                        TextInput::make('nilai_uji_2')->hidden(),
 
-
+                    ]),
             ])->columns(1);
     }
 }

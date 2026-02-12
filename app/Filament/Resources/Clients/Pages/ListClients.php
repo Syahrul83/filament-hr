@@ -48,11 +48,11 @@ class ListClients extends ListRecords
     protected function getTableQuery(): Builder
     {
 
-        if (Role::where('name', 'Penguji-1')->first()->id == Auth::user()->role_id || Role::where('name', 'Penguji-2')->first()->id == Auth::user()->role_id) {
+        if (Role::whereIn('name', ['Penguji-1', 'Penguji-2', 'Admin'])->where('id', Auth::user()->role_id)->exists()) {
             return Client::orderBy('id', 'desc');
-        } else {
-            return Client::where('user_id', Auth::user()->id)->orderBy('id', 'desc');
         }
+
+        return Client::where('user_id', Auth::id())->orderBy('id', 'desc');
 
     }
 }
