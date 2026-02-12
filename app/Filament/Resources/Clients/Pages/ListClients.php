@@ -11,7 +11,6 @@ use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
 
 class ListClients extends ListRecords
 {
@@ -48,7 +47,7 @@ class ListClients extends ListRecords
     protected function getTableQuery(): Builder
     {
 
-        if (Role::whereIn('name', ['Penguji-1', 'Penguji-2', 'Admin'])->where('id', Auth::user()->role_id)->exists()) {
+        if (Auth::user()->hasAnyRole(['Penguji-1', 'Penguji-2', 'Admin'])) {
             return Client::orderBy('id', 'desc');
         }
 

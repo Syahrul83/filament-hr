@@ -37,6 +37,7 @@ class ClientForm
                         Textarea::make('paduan_bukti_objektif'),
                         Textarea::make('temuan')->hidden(),
                         FileUpload::make('lampiran')
+                            ->image()
                             ->directory('audit-attachments')
                             ->maxSize(1120),
                     ])
