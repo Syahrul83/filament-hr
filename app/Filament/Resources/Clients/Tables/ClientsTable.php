@@ -9,6 +9,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class ClientsTable
 {
@@ -16,9 +17,13 @@ class ClientsTable
     {
         return $table
             ->columns([
-                TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('No')
+                    ->rowIndex(),
+                TextColumn::make('user.name')
+                    ->label('User')
+                    ->sortable()
+                    ->searchable()
+                    ->hidden(fn () => Auth::user()?->hasRole('user')),
                 TextColumn::make('judul')
                     ->searchable(),
                 TextColumn::make('penjelasan')
