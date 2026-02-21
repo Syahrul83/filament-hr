@@ -21,6 +21,7 @@ class ListClients extends ListRecords
         return [
             // CreateAction::make(),
             Action::make('create')
+                ->visible(Auth::user()->hasAnyRole(['user']))
                 ->form([
                     Select::make('audit_id')
                         ->required()

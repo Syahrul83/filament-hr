@@ -9,7 +9,11 @@ use App\Filament\Resources\Clients\Schemas\ClientForm;
 use App\Filament\Resources\Clients\Tables\ClientsTable;
 use App\Models\Client;
 use BackedEnum;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -25,6 +29,35 @@ class ClientResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return ClientForm::configure($schema);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make()
+                    ->schema([
+                        TextEntry::make('judul'),
+
+                        TextEntry::make('user_id'),
+                        TextEntry::make('penjelasan'),
+                        TextEntry::make('tanggal'),
+                    ]),
+
+                RepeatableEntry::make('klausul_panduan')
+                    ->schema([
+                        TextEntry::make('klausul'),
+
+                        TextEntry::make('paduan_bukti_objektif'),
+                        TextEntry::make('temuan'),
+                        ImageEntry::make('lampiran')
+                            ->disk('public')
+                            ->url(fn (string $state): string => asset('storage/'.$state))
+                            ->openUrlInNewTab(),
+                        TextEntry::make('nilai_uji_1'),
+                        TextEntry::make('nilai_uji_2'),
+                    ])->columns(2),
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
@@ -45,6 +78,7 @@ class ClientResource extends Resource
             'index' => ListClients::route('/'),
             // 'create' => CreateClient::route('/create'),
             // 'edit' => EditClient::route('/{record}/edit'),
+            'view' => Pages\ViewClient::route('/{record}'),
         ];
     }
 }
