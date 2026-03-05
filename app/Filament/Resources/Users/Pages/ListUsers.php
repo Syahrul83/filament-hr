@@ -22,8 +22,8 @@ class ListUsers extends ListRecords
 
     protected function getTableQuery(): Builder
     {
-        if (Auth::user()->hasAnyRole(['Penguji-1', 'Penguji-2', 'Admin'])) {
-            return User::whereHas('roles', fn ($query) => $query->whereNot('name', 'super_admin'));
+        if (Auth::user()->hasAnyRole(['Penguji-1', 'Penguji-2', 'Admin', 'super_admin'])) {
+            return User::whereHas('roles', fn($query) => $query->whereNot('name', 'super_admin'));
         }
 
         return User::where('user_id', Auth::id());
