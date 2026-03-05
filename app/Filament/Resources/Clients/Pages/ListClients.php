@@ -21,9 +21,10 @@ class ListClients extends ListRecords
         return [
             // CreateAction::make(),
             Action::make('create')
-                ->visible(Auth::user()->hasAnyRole(['user']))
+                ->visible(Auth::user()->hasAnyRole(['User']))
                 ->form([
                     Select::make('audit_id')
+                        ->label('Pilih Audit')
                         ->required()
                         ->options(function () {
                             return Audit::all()->pluck('judul', 'id');

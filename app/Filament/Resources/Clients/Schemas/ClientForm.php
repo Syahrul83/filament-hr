@@ -9,6 +9,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 
 class ClientForm
@@ -45,14 +46,15 @@ class ClientForm
                             ->image()
                             ->openable()
                             ->imagePreviewHeight('250')
-                            ->deletable(fn () => ! auth()->user()?->hasAnyRole(['Penguji-1', 'Penguji-2'])
+                            ->deletable(
+                                fn() => !auth()->user()?->hasAnyRole(['Penguji-1', 'Penguji-2'])
                             )
                             ->directory('auditAttachments')
                             ->maxSize(1120),
                         TextInput::make('nilai_uji_1')
-                            ->hidden(Auth::user()->hasAnyRole(['Penguji-2', 'Admin'])),
+                            ->hidden(Auth::user()->hasAnyRole(['Penguji-2', 'Admin', 'User'])),
                         TextInput::make('nilai_uji_2')
-                            ->hidden(Auth::user()->hasAnyRole(['Penguji-1', 'Admin'])),
+                            ->hidden(Auth::user()->hasAnyRole(['Penguji-1', 'Admin', 'User'])),
                     ])
                     ->addable(false)
                     ->deletable(false),
